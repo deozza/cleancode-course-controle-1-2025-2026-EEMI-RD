@@ -77,9 +77,6 @@ export function attack(
     weaponsToUse[1].damage,
   );
 
-  console.log(playerDamage);
-  console.log(enemyDamage);
-
   if (playerDamage === enemyDamage) {
     return [playerHealth, enemyHealth];
   }
@@ -91,6 +88,27 @@ export function attack(
 
   playerHealth -= enemyDamage - playerDamage;
   return [playerHealth, enemyHealth];
+}
+
+export function checkIfHealthIsNegative(health: number) {
+  if (health < 0) {
+    return 0;
+  }
+  return health;
+}
+
+export function checkIfWinOrLossConditionReached(
+  playerHealth: number,
+  enemyHealth: number,
+  enemyWeapon: any,
+) {
+  if (enemyHealth === 0) {
+    return [playerHealth, enemyHealth, enemyWeapon, true, true, false];
+  }
+  if (playerHealth === 0) {
+    return [playerHealth, enemyHealth, enemyWeapon, true, false, true];
+  }
+  return [playerHealth, enemyHealth, enemyWeapon, true, false, false];
 }
 
 export function fight(
@@ -113,12 +131,8 @@ export function fight(
     throw new Error("Round already played");
   }
 
-  let playerDamages: number = 0;
-  let enemyDamages: number = 0;
-
   let enemyWeapon = weaponList[Math.floor(Math.random() * weaponList.length)];
 
-  // let weaponsToUse: any[] = selectWeapon(weaponList, playerWeapon, enemyWeapon);
   let fightResults: any[] = attack(
     [playerWeapon, enemyWeapon],
     playerHealth,
@@ -128,21 +142,12 @@ export function fight(
   playerHealth = fightResults[0];
   enemyHealth = fightResults[1];
 
-  if (playerHealth <= 0) {
-    playerHealth = 0;
-  }
+  playerHealth = checkIfHealthIsNegative(playerHealth);
+  enemyHealth = checkIfHealthIsNegative(enemyHealth);
 
-  if (enemyHealth <= 0) {
-    enemyHealth = 0;
-  }
-
-  if (enemyHealth === 0) {
-    return [playerHealth, enemyHealth, true, true, false];
-  }
-
-  if (playerHealth === 0) {
-    return [playerHealth, enemyHealth, enemyWeapon, true, false, true];
-  }
-
-  return [playerHealth, enemyHealth, enemyWeapon, true, false, false];
+  return checkIfWinOrLossConditionReached(
+    playerHealth,
+    enemyHealth,
+    enemyWeapon,
+  );
 }
