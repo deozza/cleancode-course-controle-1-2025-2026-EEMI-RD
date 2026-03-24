@@ -15,8 +15,6 @@ export function initPlayerAndEnemyStats() {
   let hasInit = true;
   let hasRound = true;
   let hasFought = false;
-  let playerWon = false;
-  let playerLost = false;
 
   weaponList = weapons;
 
@@ -31,8 +29,6 @@ export function initPlayerAndEnemyStats() {
     hasInit,
     hasRound,
     hasFought,
-    playerWon,
-    playerLost,
   };
 }
 

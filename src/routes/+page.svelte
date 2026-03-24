@@ -11,9 +11,7 @@
 		playerRerolls: 0,
 		hasInit: false,
 		hasRound: false,
-		hasFought: false,
-		playerWon: false,
-		playerLost: false
+		hasFought: false
 	};
 
 	function triggerInit() {
@@ -97,28 +95,28 @@
 </section>
 
 <section id="action">
-	{#if state.hasInit === false}
+	{#if state.playerCurrentHealth === null || state.enemyCurrentHealth === null}
 		<button class="variant-filled-primary btn btn-xl" on:click={triggerInit}>Start</button>
 	{:else}
-		{#if state.hasRound === true && state.hasFought === true && state.playerWon === false && state.playerLost === false}
+		{#if state.hasRound === true && state.hasFought === true && state.playerCurrentHealth > 0 && state.enemyCurrentHealth > 0}
 			<button class="variant-filled-warning btn btn-xl" on:click={triggerNewRound}
 				>Next Round</button
 			>
 		{/if}
 
-		{#if state.hasRound === true && state.hasFought === false && state.playerWon === false && state.playerLost === false}
+		{#if state.hasRound === true && state.hasFought === false && state.playerCurrentHealth > 0 && state.enemyCurrentHealth > 0}
 			<button class="variant-filled-error btn btn-xl" on:click={triggerFight}>Fight</button>
 			<button class="variant-filled-error btn btn-xl" on:click={triggerReroll}
 				>Reroll weapon ({2 - state.playerRerolls} left)
 			</button>
 		{/if}
 
-		{#if state.hasRound === true && state.hasFought === true && state.playerWon === true && state.playerLost === false}
+		{#if state.enemyCurrentHealth === 0}
 			<p class="p">You won !</p>
 			<button class="variant-filled-primary btn btn-xl" on:click={triggerInit}>Play again</button>
 		{/if}
 
-		{#if state.hasRound === true && state.hasFought === true && state.playerWon === false && state.playerLost === true}
+		{#if state.playerCurrentHealth === 0}
 			<p class="p">You lost ...</p>
 			<button class="variant-filled-primary btn btn-xl" on:click={triggerInit}>Play again</button>
 		{/if}
