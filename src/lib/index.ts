@@ -49,12 +49,24 @@ export function newRound(hasInit: boolean) {
   }
 }
 
+export function rerollWeapon(rerollCount: number) {
+  weaponList = weapons;
+  rerollCount++;
+
+  return {
+    playerWeapon: weaponList[Math.floor(Math.random() * weaponList.length)],
+    enemyWeapon: null,
+    hasRound: true,
+    hasFought: false,
+  };
+}
+
 export function calculateDamage(weaponName: any, weaponDamage: number): number {
-  if (weaponName === "bow" || weaponName === "crossbow") {
-    return weaponDamage * Math.floor(Math.random() * 5);
+  if (weaponName == "bow" || weaponName == "crossbow") {
+    return weaponDamage * Math.floor(Math.random() * 5 + 1);
   }
-  if (weaponName === "darts") {
-    return weaponDamage * Math.floor(Math.random() * 3);
+  if (weaponName == "darts") {
+    return weaponDamage * Math.floor(Math.random() * 3 + 1);
   }
   return weaponDamage;
 }
@@ -68,6 +80,8 @@ export function attack(
     throw new Error("Invalid weapon");
   }
 
+  console.log(weaponsToUse[0].name);
+
   let playerDamage = calculateDamage(
     weaponsToUse[0].name,
     weaponsToUse[0].damage,
@@ -76,6 +90,8 @@ export function attack(
     weaponsToUse[1].name,
     weaponsToUse[1].damage,
   );
+
+  console.log("player = " + playerDamage + " enemy = " + enemyDamage);
 
   if (playerDamage === enemyDamage) {
     return [playerHealth, enemyHealth];
