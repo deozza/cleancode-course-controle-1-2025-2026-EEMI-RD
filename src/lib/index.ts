@@ -2,7 +2,7 @@ import weapons from "./weaponList.json";
 
 export let weaponList: any[] = [];
 
-export function init() {
+export function initPlayerAndEnemyStats() {
   weaponList = weapons;
 
   let playerMaxHealth = 10;
@@ -36,24 +36,11 @@ export function init() {
   };
 }
 
-export function newRound(hasInit: boolean) {
-  if (hasInit) {
-    weaponList = weapons;
-
-    return {
-      playerWeapon: weaponList[Math.floor(Math.random() * weaponList.length)],
-      enemyWeapon: null,
-      hasRound: true,
-      hasFought: false,
-    };
-  } else {
+export function rollWeapon(hasInit: boolean) {
+  if (!hasInit) {
     throw new Error("Game not initialized");
   }
-}
-
-export function rerollWeapon(rerollCount: number) {
   weaponList = weapons;
-  rerollCount++;
 
   return {
     playerWeapon: weaponList[Math.floor(Math.random() * weaponList.length)],
@@ -73,7 +60,7 @@ export function calculateDamage(weaponName: any, weaponDamage: number): number {
   return weaponDamage;
 }
 
-export function attack(
+export function startDuel(
   weaponsToUse: any[],
   playerHealth: any,
   enemyHealth: any,
@@ -111,7 +98,7 @@ export function checkIfHealthIsNegative(health: number) {
   return health;
 }
 
-export function checkIfWinOrLossConditionReached(
+export function checkIfGameIsOver(
   playerHealth: number,
   enemyHealth: number,
   enemyWeapon: any,
@@ -147,7 +134,7 @@ export function fight(
 
   let enemyWeapon = weaponList[Math.floor(Math.random() * weaponList.length)];
 
-  let fightResults: any[] = attack(
+  let fightResults: any[] = startDuel(
     [playerWeapon, enemyWeapon],
     playerHealth,
     enemyHealth,
@@ -159,9 +146,5 @@ export function fight(
   playerHealth = checkIfHealthIsNegative(playerHealth);
   enemyHealth = checkIfHealthIsNegative(enemyHealth);
 
-  return checkIfWinOrLossConditionReached(
-    playerHealth,
-    enemyHealth,
-    enemyWeapon,
-  );
+  return checkIfGameIsOver(playerHealth, enemyHealth, enemyWeapon);
 }

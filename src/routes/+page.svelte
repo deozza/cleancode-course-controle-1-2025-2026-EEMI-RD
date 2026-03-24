@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fight, init, newRound, rerollWeapon } from '$lib';
+	import { fight, initPlayerAndEnemyStats, rollWeapon } from '$lib';
 
 	let state: any = {
 		playerMaxHealth: null,
@@ -17,13 +17,13 @@
 	};
 
 	function triggerInit() {
-		state = init();
+		state = initPlayerAndEnemyStats();
 	}
 
 	function triggerNewRound() {
 		let response = null;
 		try {
-			response = newRound(state.hasInit);
+			response = rollWeapon(state.hasInit);
 		} catch (error) {
 			console.error(error);
 		}
@@ -41,7 +41,7 @@
 		if (state.playerRerolls < 2) {
 			let response = null;
 			try {
-				response = rerollWeapon(state.playerRerolls);
+				response = rollWeapon(state.hasInit);
 			} catch (error) {
 				console.error(error);
 			}
