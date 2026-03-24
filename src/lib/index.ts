@@ -10,6 +10,7 @@ export function init() {
   let enemyMaxHealth = 10;
   let enemyCurrentHealth = 10;
   let playerWeapon = weaponList[Math.floor(Math.random() * weaponList.length)];
+  let playerRerolls = 0;
   let enemyWeapon = null;
   let hasInit = true;
   let hasRound = true;
@@ -25,6 +26,7 @@ export function init() {
     enemyMaxHealth,
     enemyCurrentHealth,
     playerWeapon,
+    playerRerolls,
     enemyWeapon,
     hasInit,
     hasRound,
@@ -80,8 +82,6 @@ export function attack(
     throw new Error("Invalid weapon");
   }
 
-  console.log(weaponsToUse[0].name);
-
   let playerDamage = calculateDamage(
     weaponsToUse[0].name,
     weaponsToUse[0].damage,
@@ -90,8 +90,6 @@ export function attack(
     weaponsToUse[1].name,
     weaponsToUse[1].damage,
   );
-
-  console.log("player = " + playerDamage + " enemy = " + enemyDamage);
 
   if (playerDamage === enemyDamage) {
     return [playerHealth, enemyHealth];

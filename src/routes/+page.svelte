@@ -109,7 +109,7 @@
 		{#if state.hasRound === true && state.hasFought === false && state.playerWon === false && state.playerLost === false}
 			<button class="variant-filled-error btn btn-xl" on:click={triggerFight}>Fight</button>
 			<button class="variant-filled-error btn btn-xl" on:click={triggerReroll}
-				>Reroll weapon
+				>Reroll weapon ({2 - state.playerRerolls} left)
 			</button>
 		{/if}
 
