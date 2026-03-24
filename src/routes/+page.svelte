@@ -6,6 +6,7 @@
 		playerCurrentHealth: null,
 		enemyMaxHealth: null,
 		enemyCurrentHealth: null,
+		playerWeaponList: null,
 		playerWeapon: null,
 		enemyWeapon: null,
 		playerRerolls: 0,
@@ -21,7 +22,7 @@
 	function triggerNewRound() {
 		let response = null;
 		try {
-			response = rollWeapon(state.hasInit);
+			response = rollWeapon(state.hasInit, state.playerWeaponList);
 		} catch (error) {
 			console.error(error);
 		}
@@ -39,7 +40,7 @@
 		if (state.playerRerolls < 2) {
 			let response = null;
 			try {
-				response = rollWeapon(state.hasInit);
+				response = rollWeapon(state.hasInit, state.playerWeaponList);
 			} catch (error) {
 				console.error(error);
 			}
@@ -64,7 +65,8 @@
 				state.playerWeapon,
 				state.hasInit,
 				state.hasRound,
-				state.hasFought
+				state.hasFought,
+				state.playerWeaponList
 			);
 		} catch (error) {
 			console.error(error);
@@ -77,6 +79,7 @@
 			state.hasFought = response[3];
 			state.playerWon = response[4];
 			state.playerLost = response[5];
+			state.playerWeaponList = response[6];
 		}
 	}
 </script>
@@ -98,7 +101,7 @@
 	{#if state.playerCurrentHealth === null || state.enemyCurrentHealth === null}
 		<button class="variant-filled-primary btn btn-xl" on:click={triggerInit}>Start</button>
 	{:else}
-		{#if state.hasRound === true && state.hasFought === true && state.playerCurrentHealth > 0 && state.enemyCurrentHealth > 0}
+		{#if state.hasRound === true && state.hasFought === true && state.playerCurrentHealth > 0 && state.enemyCurrentHealth > 0 && state.playerWeaponList.length > 0}
 			<button class="variant-filled-warning btn btn-xl" on:click={triggerNewRound}
 				>Next Round</button
 			>
@@ -118,6 +121,10 @@
 
 		{#if state.playerCurrentHealth === 0}
 			<p class="p">You lost ...</p>
+			<button class="variant-filled-primary btn btn-xl" on:click={triggerInit}>Play again</button>
+		{/if}
+		{#if state.playerWeaponList.length === 0}
+			<p class="p">Out of weapons ...</p>
 			<button class="variant-filled-primary btn btn-xl" on:click={triggerInit}>Play again</button>
 		{/if}
 	{/if}

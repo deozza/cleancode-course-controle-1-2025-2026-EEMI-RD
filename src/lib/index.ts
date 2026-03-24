@@ -9,7 +9,9 @@ export function initPlayerAndEnemyStats() {
   let playerCurrentHealth = 10;
   let enemyMaxHealth = 10;
   let enemyCurrentHealth = 10;
-  let playerWeapon = weaponList[Math.floor(Math.random() * weaponList.length)];
+  let playerWeaponList = weaponList;
+  let playerWeapon =
+    playerWeaponList[Math.floor(Math.random() * weaponList.length)];
   let playerRerolls = 0;
   let enemyWeapon = null;
   let hasInit = true;
@@ -23,6 +25,7 @@ export function initPlayerAndEnemyStats() {
     playerCurrentHealth,
     enemyMaxHealth,
     enemyCurrentHealth,
+    playerWeaponList,
     playerWeapon,
     playerRerolls,
     enemyWeapon,
@@ -32,11 +35,11 @@ export function initPlayerAndEnemyStats() {
   };
 }
 
-export function rollWeapon(hasInit: boolean) {
+export function rollWeapon(hasInit: boolean, playerWeaponList: any[]) {
   if (!hasInit) {
     throw new Error("Game not initialized");
   }
-  weaponList = weapons;
+  weaponList = playerWeaponList;
 
   return {
     playerWeapon: weaponList[Math.floor(Math.random() * weaponList.length)],
@@ -87,6 +90,10 @@ export function startDuel(
   return [playerHealth, enemyHealth];
 }
 
+export function removeWeaponFromPool(weaponList: any[], weapon: any): any[] {
+  return weaponList.filter((w) => w.name != weapon.name);
+}
+
 export function checkIfHealthIsNegative(health: number) {
   if (health < 0) {
     return 0;
@@ -98,14 +105,39 @@ export function checkIfGameIsOver(
   playerHealth: number,
   enemyHealth: number,
   enemyWeapon: any,
+  playerWeaponList: any[],
 ) {
   if (enemyHealth === 0) {
-    return [playerHealth, enemyHealth, enemyWeapon, true, true, false];
+    return [
+      playerHealth,
+      enemyHealth,
+      enemyWeapon,
+      true,
+      true,
+      false,
+      playerWeaponList,
+    ];
   }
   if (playerHealth === 0) {
-    return [playerHealth, enemyHealth, enemyWeapon, true, false, true];
+    return [
+      playerHealth,
+      enemyHealth,
+      enemyWeapon,
+      true,
+      false,
+      true,
+      playerWeaponList,
+    ];
   }
-  return [playerHealth, enemyHealth, enemyWeapon, true, false, false];
+  return [
+    playerHealth,
+    enemyHealth,
+    enemyWeapon,
+    true,
+    false,
+    false,
+    playerWeaponList,
+  ];
 }
 
 export function fight(
@@ -115,6 +147,7 @@ export function fight(
   hasInit: boolean,
   hasRound: boolean,
   hasFought: boolean,
+  playerWeaponList: any[],
 ): Array<number | boolean> {
   if (!hasInit) {
     throw new Error("Game not initialized");
@@ -139,8 +172,15 @@ export function fight(
   playerHealth = fightResults[0];
   enemyHealth = fightResults[1];
 
+  playerWeaponList = removeWeaponFromPool(playerWeaponList, playerWeapon);
+
   playerHealth = checkIfHealthIsNegative(playerHealth);
   enemyHealth = checkIfHealthIsNegative(enemyHealth);
 
-  return checkIfGameIsOver(playerHealth, enemyHealth, enemyWeapon);
+  return checkIfGameIsOver(
+    playerHealth,
+    enemyHealth,
+    enemyWeapon,
+    playerWeaponList,
+  );
 }

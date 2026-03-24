@@ -51,6 +51,6 @@
     "name": "sword",
     "description": "Deals 5 damage to the enemy.",
     "rarity": "rare",
-    "damage": 1
+    "damage": 5
   }
 ]
