@@ -86,7 +86,6 @@ export function fight(playerHealth: number, enemyHealth: number, playerWeapon: a
                         throw new Error('Invalid weapon');
                 }
             
-                // reset weapon list so the enemy could play
                 weaponList = weapons;
             
                 let enemyWeapon = weaponList[Math.floor(Math.random() * weaponList.length)];
@@ -127,28 +126,22 @@ export function fight(playerHealth: number, enemyHealth: number, playerWeapon: a
                     playerHealth -= enemyDamages - playerDamages;
                 }
            
-                // health cannot be negative
                 if(playerHealth <= 0) {
                     playerHealth = 0;
                 }
             
-                // health cannot be negative
                 if(enemyHealth <= 0) {
                     enemyHealth = 0;
                 }
                 
-                // check if the game is over and the player has won
                 if(enemyHealth === 0) {
                     return [playerHealth, enemyHealth, enemyWeapon, true, true, false];
                 }
 
-
-                // check if the game is over and the player has lost
                 if(playerHealth === 0) {
                     return [playerHealth, enemyHealth, enemyWeapon, true, false, true];
                 }
             
-                return [playerHealth, enemyHealth, enemyWeapon, true, false, false];
             }else{
                 throw new Error('Round already played');
             }
